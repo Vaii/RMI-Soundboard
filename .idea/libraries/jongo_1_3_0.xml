@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jongo-1.3.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jongo-1.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json-20080701.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/json-20140107.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
