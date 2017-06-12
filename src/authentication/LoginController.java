@@ -1,5 +1,6 @@
 package authentication;
 
+import Controller.ControllerController;
 import Domain.Crypt;
 import Domain.User;
 import authentication.repository.ILoginContext;
@@ -49,7 +50,7 @@ public class LoginController implements Initializable {
         try{
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("register.fxml"));
-            Parent root = (Parent)loader.load();
+            Parent root = loader.load();
             stage.setTitle("Register");
             stage.setScene(new Scene(root));
             stage.showAndWait();
@@ -78,9 +79,37 @@ public class LoginController implements Initializable {
                 }
                 else if(client.isSelected()){
                     currentUser.setController(false);
+
+                    try {
+                        Stage stage = new Stage();
+                        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Client/Client.fxml"));
+                        Parent root = loader.load();
+                        stage.setTitle("Client");
+                        stage.setScene(new Scene(root));
+                        stage.show();
+                        Stage thisStage = (Stage)login.getScene().getWindow();
+                        thisStage.close();
+                    }
+                    catch(IOException e){
+                        e.printStackTrace();
+                    }
                 }
                 else if(controller.isSelected()){
                     currentUser.setController(true);
+
+                    try{
+                        Stage stage = new Stage();
+                        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Controller/Controller.fxml"));
+                        Parent root = loader.load();
+                        stage.setTitle("Controller");
+                        stage.setScene(new Scene(root));
+                        stage.show();
+                        Stage thisStage = (Stage)login.getScene().getWindow();
+                        thisStage.close();
+                    }
+                    catch(IOException e){
+                        e.printStackTrace();
+                    }
                 }
                 else if(!client.isSelected() && !controller.isSelected()){
                     Alert alert =  new Alert(Alert.AlertType.ERROR);
