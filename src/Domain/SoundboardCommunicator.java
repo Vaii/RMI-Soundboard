@@ -2,7 +2,9 @@ package Domain;
 
 import Client.ClientController;
 import Controller.ControllerController;
+import Shared.RefreshEvent;
 import Shared.SoundEvent;
+import Shared.VolumeEvent;
 import fontyspublisher.IRemotePropertyListener;
 import fontyspublisher.IRemotePublisherForDomain;
 import fontyspublisher.IRemotePublisherForListener;
@@ -32,6 +34,10 @@ public class SoundboardCommunicator extends UnicastRemoteObject implements IRemo
     private static String bindingName = "publisher";
     private boolean connected = false;
 
+    public boolean isConnected() {
+        return connected;
+    }
+
     private ControllerController controller;
     private ClientController client;
 
@@ -53,15 +59,27 @@ public class SoundboardCommunicator extends UnicastRemoteObject implements IRemo
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
         String property = evt.getPropertyName();
 
-        SoundEvent soundEvent = (SoundEvent)evt.getNewValue();
+        if(property.equals("Sound")){
+            SoundEvent soundEvent = (SoundEvent)evt.getNewValue();
 
-        client.requestPlaySound(property, soundEvent);
+            client.requestPlaySound(property, soundEvent);
+        }
+        if(property.equals("Refresh")){
+
+            RefreshEvent refreshEvent = (RefreshEvent)evt.getNewValue();
+            controller.refreshSoundList(property, refreshEvent);
+        }
+        if(property.equals("Volume")){
+            VolumeEvent volumeEvent = (VolumeEvent)evt.getNewValue();
+
+        }
+
     }
 
 
-    public void connectToPublisher(){
+    public void connectToPublisher(String ipAdress, int port){
         try{
-            Registry registry = LocateRegistry.getRegistry("localhost", portNumber);
+            Registry registry = LocateRegistry.getRegistry(ipAdress, port);
             publisherForDomain = (IRemotePublisherForDomain) registry.lookup(bindingName);
             publisherForListener = (IRemotePublisherForListener) registry.lookup(bindingName);
             connected = true;
@@ -116,11 +134,11 @@ public class SoundboardCommunicator extends UnicastRemoteObject implements IRemo
         }
     }
 
-    public void broadcast(String property, SoundEvent soundEvent){
+    public void broadcast(String property, Object object){
         if(connected){
             threadPool.execute(() -> {
                 try{
-                    publisherForDomain.inform(property, null, soundEvent);
+                    publisherForDomain.inform(property, null, object);
                 }
                 catch(RemoteException ex){
                     Logger.getLogger(SoundboardCommunicator.class.getName()).log(Level.SEVERE, null, ex);

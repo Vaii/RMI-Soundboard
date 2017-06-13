@@ -10,5 +10,6 @@ import java.util.ArrayList;
 public interface IControllerContext {
 
     boolean uploadSound(Sound sound);
+    boolean removeSound(Sound sound);
     ArrayList<Sound> loadAllSounds();
 }

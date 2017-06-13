@@ -24,6 +24,15 @@ public class ControllerRepository {
         }
     }
 
+    public boolean removeSound(Sound sound){
+        if(controllerContext.removeSound(sound)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public ArrayList<Sound> getAllSounds(){
         return controllerContext.loadAllSounds();
     }

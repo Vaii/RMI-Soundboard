@@ -29,6 +29,15 @@ public class ControllerMongoContext implements IControllerContext {
     }
 
     @Override
+    public boolean removeSound(Sound sound) {
+        MongoCollection sounds = DataSource.connect().getCollection("Sounds");
+
+        sounds.remove("{name:#}", sound.getName());
+
+        return true;
+    }
+
+    @Override
     public ArrayList<Sound> loadAllSounds() {
 
         MongoCollection sounds = DataSource.connect().getCollection("Sounds");

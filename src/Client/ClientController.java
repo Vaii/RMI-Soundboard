@@ -44,7 +44,7 @@ public class ClientController implements Initializable {
 
     private void connectToPublisher() {
 
-        communicator.connectToPublisher();
+        communicator.connectToPublisher("localhost", 1099);
 
         communicator.subscribe("Sound");
 
