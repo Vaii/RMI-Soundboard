@@ -6,6 +6,7 @@ import Domain.Sound;
 import Domain.SoundboardCommunicator;
 import Shared.RefreshEvent;
 import Shared.SoundEvent;
+import Shared.VolumeEvent;
 import com.sun.deploy.cache.Cache;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -95,7 +96,12 @@ public class ControllerController implements Initializable {
 
         float systemVolume = 7.5f * (float)percentage;
 
-        setOutputVolume(systemVolume);
+        if(communicator.isConnected()){
+            VolumeEvent volumeEvent = new VolumeEvent(systemVolume);
+            communicator.broadcast("Volume", volumeEvent);
+        }
+
+
     }
 
     private void removeSound(ActionEvent actionEvent) {
@@ -212,29 +218,4 @@ public class ControllerController implements Initializable {
             Logger.getLogger(ControllerController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public static void setOutputVolume(float value){
-
-        String command = "set volume " + value;
-        try{
-            ProcessBuilder pb = new ProcessBuilder("osascript", "-e", command);
-            pb.directory(new File("/usr/bin"));
-            StringBuffer output = new StringBuffer();
-            Process p = pb.start();
-            p.waitFor();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line;
-
-            while((line = reader.readLine()) != null){
-                output.append(line + "\n");
-            }
-            System.out.println("output");
-        }
-        catch(Exception e){
-            Logger.getLogger(ControllerController.class.getName()).log(Level.SEVERE, null , e);
-        }
-    }
-
 }

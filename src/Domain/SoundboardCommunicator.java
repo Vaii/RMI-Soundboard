@@ -71,9 +71,8 @@ public class SoundboardCommunicator extends UnicastRemoteObject implements IRemo
         }
         if(property.equals("Volume")){
             VolumeEvent volumeEvent = (VolumeEvent)evt.getNewValue();
-
+            client.requestVolumeChange(property, volumeEvent);
         }
-
     }
 
 
